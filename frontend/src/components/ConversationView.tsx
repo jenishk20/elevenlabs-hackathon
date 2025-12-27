@@ -1,5 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from 'react'
 import { useConversation } from '@elevenlabs/react'
+import { getApiUrl } from '../config'
 
 interface ConversationViewProps {
   userName: string
@@ -54,7 +55,8 @@ export function ConversationView({ userName, onEnd }: ConversationViewProps) {
       
       await navigator.mediaDevices.getUserMedia({ audio: true })
       
-      const response = await fetch('/api/conversation/start', {
+      // Use the API URL helper for production compatibility
+      const response = await fetch(getApiUrl('/api/conversation/start'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userName }),
