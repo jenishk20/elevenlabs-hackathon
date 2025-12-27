@@ -69,10 +69,16 @@ export function ConversationView({ userName, onEnd }: ConversationViewProps) {
       
       const { signedUrl, agentId } = await response.json()
       
+      // The ElevenLabs SDK requires signedUrl for connection
       if (signedUrl) {
         await conversation.startSession({ signedUrl })
       } else if (agentId) {
-        await conversation.startSession({ agentId })
+        // If no signedUrl, we need to get one from ElevenLabs directly
+        // For now, use the agentId with the correct format
+        await conversation.startSession({ 
+          agentId,
+          connectionType: 'webrtc' as const
+        })
       } else {
         throw new Error('No agent configured')
       }
